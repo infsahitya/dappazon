@@ -18,6 +18,7 @@ contract Dappazon {
     uint256 private totalItems;
     mapping(uint256 => Item) private items;
 
+
     constructor(string memory initContractName) {
         contractName = initContractName;
         storeOwner = msg.sender;
@@ -25,22 +26,25 @@ contract Dappazon {
         totalItems = 0;
     }
 
-    // TODO: Get deployed contract's name
+    // TODO: EVENT - emit information about added product
+    event AddProduct(uint256 _id, string _name, uint256 _stock);
+
+    // TODO: FUNCTION - Get deployed contract's name
     function getContractName() public view returns (string memory) {
         return contractName;
     }
 
-    // TODO: Get deployers address
+    // TODO: FUNCTION - Get contract's deployer's address
     function getStoreOwner() public view returns (address) {
         return storeOwner;
     }
 
-    // TODO: Get Product
+    // TODO: FUNCTION - Get details about a product using ID
     function getProduct(uint256 _id) public view returns (Item memory) {
         return items[_id];
     }
 
-    // TODO: Add Product
+    // TODO: FUNCTION - Add a product to mapping
     function addProduct(
         uint256 _id,
         uint256 _cost,
@@ -61,15 +65,17 @@ contract Dappazon {
         );
 
         items[_id] = item;
+
+        emit AddProduct(_id, _name, _stock);
     }
 
-    // TODO: Buy Products
+    // TODO: FUNCTION - Buy a product
     function buyProduct() public {}
 
-    // TODO: Withdraw Funds
+    // TODO: FUNCTION - Withdraw the funds
     function withdrawFunds() public {}
 
-    // TODO: List Products
+    // TODO: FUNCTION - List all the products stored in mapping
     function listProducts() public view returns (Item[] memory) {
         Item[] memory productsList = new Item[](totalItems);
 

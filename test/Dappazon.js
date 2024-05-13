@@ -7,6 +7,18 @@ const tokens = (n) => {
 
 const contractName = "Dappazon";
 
+const dummyProduct = {
+  id: 1,
+  rating: 4,
+  stock: 999,
+  name: "Keyboard",
+  cost: tokens(1.5),
+  category: "Electronics",
+  image: "Keyboard <> Image",
+}
+
+const addProductEventName = "AddProduct";
+
 describe("Dappazon", () => {
   let dappazon;
   let buyer, deployer;
@@ -30,26 +42,30 @@ describe("Dappazon", () => {
     });
   });
 
-  describe("Actions", () => {
+  describe("Add Product", () => {
     let transaction;
 
     beforeEach(async () => {
       transaction = await dappazon.connect(deployer).addProduct(
-        1,
-        1000,
-        9,
-        4,
-        "Keyboard",
-        "Dummy Keyboard Image",
-        "Electronics",
+        dummyProduct.id,
+        dummyProduct.cost,
+        dummyProduct.stock,
+        dummyProduct.rating,
+        dummyProduct.name,
+        dummyProduct.image,
+        dummyProduct.category,
       );
       
       await transaction.wait();
     })
 
-    it("Added Product Matched", async () => {
+    it("Product Matched", async () => {
       const fetchedItem = await dappazon.getProduct(1);
       expect(fetchedItem.id).to.be.equal(1);
+    })
+
+    it("Event Emitted", async () => {
+      expect(transaction).to.emit(dappazon, addProductEventName);
     })
   })
 });
