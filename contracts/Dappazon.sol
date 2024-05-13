@@ -35,6 +35,11 @@ contract Dappazon {
         return storeOwner;
     }
 
+    // TODO: Get Product
+    function getProduct(uint256 _id) public view returns (Item memory) {
+        return items[_id];
+    }
+
     // TODO: Add Product
     function addProduct(
         uint256 _id,
