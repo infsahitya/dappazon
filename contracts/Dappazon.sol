@@ -17,4 +17,19 @@ contract Dappazon {
     function getStoreOwner() public view returns (address) {
         return storeOwner;
     }
+
+    // TODO: List Products
+    function listProducts() public {
+
+    }
+
+    // TODO: Buy Products
+    function buyProduct() public {
+    
+    }
+
+    // TODO: Withdraw Funds
+    function withdrawFunds() public {
+    
+    }
 }
