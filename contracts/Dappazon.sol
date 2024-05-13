@@ -2,6 +2,7 @@
 pragma solidity ^0.8.9;
 
 contract Dappazon {
+    uint256 private totalItems;
     address private storeOwner;
     string private contractName;
 
@@ -15,9 +16,7 @@ contract Dappazon {
         string category;
     }
 
-    uint256 private totalItems;
     mapping(uint256 => Item) private items;
-
 
     constructor(string memory initContractName) {
         contractName = initContractName;
@@ -26,25 +25,31 @@ contract Dappazon {
         totalItems = 0;
     }
 
+    // TODO: MODIFIER - check only for owner/deployer of the contract
+    modifier onlyOwner() {
+        require(storeOwner == msg.sender);
+        _;
+    }
+
     // TODO: EVENT - emit information about added product
     event AddProduct(uint256 _id, string _name, uint256 _stock);
 
-    // TODO: FUNCTION - Get deployed contract's name
+    // TODO: FUNCTION - get deployed contract's name
     function getContractName() public view returns (string memory) {
         return contractName;
     }
 
-    // TODO: FUNCTION - Get contract's deployer's address
+    // TODO: FUNCTION - get contract's deployer's address
     function getStoreOwner() public view returns (address) {
         return storeOwner;
     }
 
-    // TODO: FUNCTION - Get details about a product using ID
+    // TODO: FUNCTION - get details about a product using ID
     function getProduct(uint256 _id) public view returns (Item memory) {
         return items[_id];
     }
 
-    // TODO: FUNCTION - Add a product to mapping
+    // TODO: FUNCTION - add a product to mapping
     function addProduct(
         uint256 _id,
         uint256 _cost,
@@ -53,7 +58,7 @@ contract Dappazon {
         string memory _name,
         string memory _image,
         string memory _category
-    ) public {
+    ) public onlyOwner {
         Item memory item = Item(
             _id,
             _name,
@@ -69,13 +74,13 @@ contract Dappazon {
         emit AddProduct(_id, _name, _stock);
     }
 
-    // TODO: FUNCTION - Buy a product
+    // TODO: FUNCTION - buy a product
     function buyProduct() public {}
 
-    // TODO: FUNCTION - Withdraw the funds
+    // TODO: FUNCTION - withdraw the funds
     function withdrawFunds() public {}
 
-    // TODO: FUNCTION - List all the products stored in mapping
+    // TODO: FUNCTION - list all the products stored in mapping
     function listProducts() public view returns (Item[] memory) {
         Item[] memory productsList = new Item[](totalItems);
 
