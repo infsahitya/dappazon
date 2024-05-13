@@ -1,16 +1,23 @@
-const { expect } = require("chai")
+const { expect } = require("chai");
 
 const tokens = (n) => {
-  return ethers.utils.parseUnits(n.toString(), 'ether')
-}
+  return ethers.utils.parseUnits(n.toString(), "ether");
+};
 
 const contractName = "Dappazon";
 
 describe("Dappazon", () => {
-  it("has a name", async () => {
-    const Dappazon = await ethers.getContractFactory("Dappazon");
-    dappazon = await Dappazon.deploy(contractName);
+  let dappazon;
 
-    expect(await dappazon.getContractName()).to.equal(contractName);
-  })
-})
+  beforeEach(async () => {
+    const Dappazon = await ethers.getContractFactory(contractName);
+    dappazon = await Dappazon.deploy(contractName);
+  });
+
+  describe("Deployment", () => {
+    it("Contract Name", async () => {
+      const fetchedName = await dappazon.getContractName();
+      expect(fetchedName).to.equal(contractName);
+    });
+  });
+});
