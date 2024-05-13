@@ -27,7 +27,7 @@ contract Dappazon {
 
     // TODO: MODIFIER - check only for owner/deployer of the contract
     modifier onlyOwner() {
-        require(storeOwner == msg.sender);
+        require(storeOwner == msg.sender, "Only deployer of the contract can add a product");
         _;
     }
 
