@@ -2,8 +2,8 @@
 pragma solidity ^0.8.9;
 
 contract Dappazon {
-    address public storeOwner;
-    string public contractName;
+    address private storeOwner;
+    string private contractName;
 
     struct Item {
         uint256 id;
@@ -15,8 +15,8 @@ contract Dappazon {
         string category;
     }
 
-    mapping(uint256 => Item) items;
     uint256 private totalItems;
+    mapping(uint256 => Item) private items;
 
     constructor(string memory initContractName) {
         contractName = initContractName;
