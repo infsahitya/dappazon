@@ -19,7 +19,15 @@ contract Dappazon {
     }
 
     // TODO: List Products
-    function listProducts() public {
+    function listProducts(
+        uint256 _id,
+        uint256 _cost,
+        uint256 _stock
+        uint256 _rating,
+        string memory _name,
+        string memory _image,
+        string memory _category,
+    ) public {
 
     }
 
