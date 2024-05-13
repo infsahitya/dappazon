@@ -29,4 +29,27 @@ describe("Dappazon", () => {
       expect(fetchedOwner).to.be.equal(deployer.address);
     });
   });
+
+  describe("Actions", () => {
+    let transaction;
+
+    beforeEach(async () => {
+      transaction = await dappazon.connect(deployer).addProduct(
+        1,
+        1000,
+        9,
+        4,
+        "Keyboard",
+        "Dummy Keyboard Image",
+        "Electronics",
+      );
+      
+      await transaction.wait();
+    })
+
+    it("Added Product Matched", async () => {
+      const fetchedItem = await dappazon.getProduct(1);
+      expect(fetchedItem.id).to.be.equal(1);
+    })
+  })
 });
