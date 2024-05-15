@@ -15,7 +15,7 @@ const dummyProduct = {
   cost: tokens(1),
   category: "Electronics",
   image: "Keyboard <> Image",
-}
+};
 
 const addProductEventName = "AddProduct";
 const buyProductEventName = "BuyProduct";
@@ -47,58 +47,64 @@ describe("Dappazon", () => {
     let transaction;
 
     beforeEach(async () => {
-      transaction = await dappazon.connect(deployer).addProduct(
-        dummyProduct.id,
-        dummyProduct.cost,
-        dummyProduct.stock,
-        dummyProduct.rating,
-        dummyProduct.name,
-        dummyProduct.image,
-        dummyProduct.category,
-      );
-      
+      transaction = await dappazon
+        .connect(deployer)
+        .addProduct(
+          dummyProduct.id,
+          dummyProduct.cost,
+          dummyProduct.stock,
+          dummyProduct.rating,
+          dummyProduct.name,
+          dummyProduct.image,
+          dummyProduct.category,
+        );
+
       await transaction.wait();
-    })
+    });
 
     it("Product Matched", async () => {
       const fetchedItem = await dappazon.getProduct(dummyProduct.id);
       expect(fetchedItem.id).to.be.equal(dummyProduct.id);
-    })
+    });
 
     it("Capture Add Event", async () => {
       expect(transaction).to.emit(dappazon, addProductEventName);
-    })
+    });
 
     it("List Products", async () => {
       const fetchedItems = await dappazon.listProducts();
       expect(fetchedItems.length).to.be.equal(1);
       expect(fetchedItems[0].id).to.be.equal(dummyProduct.id);
-    })
-  })
+    });
+  });
 
   describe("Buy Product", async () => {
     let transaction;
 
     beforeEach(async () => {
-      transaction = await dappazon.connect(deployer).addProduct(
-        dummyProduct.id,
-        dummyProduct.cost,
-        dummyProduct.stock,
-        dummyProduct.rating,
-        dummyProduct.name,
-        dummyProduct.image,
-        dummyProduct.category,
-      );
+      transaction = await dappazon
+        .connect(deployer)
+        .addProduct(
+          dummyProduct.id,
+          dummyProduct.cost,
+          dummyProduct.stock,
+          dummyProduct.rating,
+          dummyProduct.name,
+          dummyProduct.image,
+          dummyProduct.category,
+        );
       await transaction.wait();
 
-      transaction = await dappazon.connect(buyer).buyProduct(dummyProduct.id, { value: dummyProduct.cost });
+      transaction = await dappazon
+        .connect(buyer)
+        .buyProduct(dummyProduct.id, { value: dummyProduct.cost });
       await transaction.wait();
-    })
+    });
 
     it("Match contract balance", async () => {
       const result = await ethers.provider.getBalance(dappazon.address);
       expect(result).to.be.equal(dummyProduct.cost);
-    })
+    });
 
     it("Match buyer's order count", async () => {
       const fetchedCount = await dappazon.connect(buyer).getOrderCount();
@@ -109,10 +115,10 @@ describe("Dappazon", () => {
       const fetchedOrder = await dappazon.connect(buyer).getOrder(1);
       expect(fetchedOrder.time).to.be.greaterThan(0);
       expect(fetchedOrder.item.name).to.be.equal(dummyProduct.name);
-    })
+    });
 
     it("Capture buy event", async () => {
       expect(transaction).to.emit(dappazon, buyProductEventName);
-    })
-  })  
+    });
+  });
 });

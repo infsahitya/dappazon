@@ -24,6 +24,24 @@ async function main() {
   await dappazon.deployed();
 
   console.log(`Deployed Dappazon Contract at: ${dappazon.address}`);
+
+  items.forEach(async (item) => {
+    const transaction = await dappazon
+      .connect(deployer)
+      .addProduct(
+        item.id,
+        item.cost,
+        item.stock,
+        item.rating,
+        item.name,
+        item.image,
+        item.category,
+      );
+
+    await transaction.wait();
+
+    console.log(`Added Item ${item.id} - ${item.name}`);
+  });
 }
 
 // We recommend this pattern to be able to use async/await everywhere
