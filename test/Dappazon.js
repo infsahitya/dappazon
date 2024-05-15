@@ -12,7 +12,7 @@ const dummyProduct = {
   rating: 4,
   stock: 999,
   name: "Keyboard",
-  cost: tokens(1.5),
+  cost: tokens(1),
   category: "Electronics",
   image: "Keyboard <> Image",
 }
@@ -27,7 +27,7 @@ describe("Dappazon", () => {
     [deployer, buyer] = await ethers.getSigners();
 
     const Dappazon = await ethers.getContractFactory(contractName);
-    dappazon = await Dappazon.deploy(contractName);
+    dappazon = await Dappazon.connect(deployer).deploy(contractName);
   });
 
   describe("Deployment", () => {
@@ -74,4 +74,30 @@ describe("Dappazon", () => {
       expect(fetchedItems[0].id).to.be.equal(dummyProduct.id);
     })
   })
+
+  describe("Buy Product", async () => {
+    let transaction;
+
+    beforeEach(async () => {
+      transaction = await dappazon.connect(deployer).addProduct(
+        dummyProduct.id,
+        dummyProduct.cost,
+        dummyProduct.stock,
+        dummyProduct.rating,
+        dummyProduct.name,
+        dummyProduct.image,
+        dummyProduct.category,
+      );
+      await transaction.wait();
+
+      transaction = await dappazon.connect(buyer).buyProduct(dummyProduct.id, { value: dummyProduct.cost });
+      await transaction.wait();
+    })
+
+    it("Contract balance for only one product of 1 ETH", async () => {
+      const result = await ethers.provider.getBalance(dappazon.address);
+      console.log(result);
+      expect(result).to.be.equal(dummyProduct.cost);
+    })
+  })  
 });

@@ -77,7 +77,9 @@ contract Dappazon {
     }
 
     // TODO: FUNCTION - buy a product
-    function buyProduct() public {}
+    function buyProduct(uint256 _id) public payable {
+        
+    }
 
     // TODO: FUNCTION - withdraw the funds
     function withdrawFunds() public {}
