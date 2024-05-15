@@ -15,8 +15,16 @@ contract Dappazon {
         string category;
     }
 
+    struct Order {
+        uint256 time;
+        Item item;
+    }
+
     mapping(uint256 => Item) private items;
     uint256[] private ItemIDs;
+
+    mapping(address => uint256) private orderCounts;
+    mapping(address => mapping(uint256 => Order)) private orders;
 
     constructor(string memory initContractName) {
         contractName = initContractName;
@@ -50,6 +58,16 @@ contract Dappazon {
         return items[_id];
     }
 
+    // TODO: FUNCTION - get order count of one user
+    function getOrderCount() public view returns (uint256) {
+        return orderCounts[msg.sender];
+    }
+
+    // TODO: FUNCTION - get order details
+    function getOrder(uint256 _id) public view returns (Order memory) {
+        return orders[msg.sender][_id];
+    }
+
     // TODO: FUNCTION - add a product to mapping
     function addProduct(
         uint256 _id,
@@ -78,7 +96,13 @@ contract Dappazon {
 
     // TODO: FUNCTION - buy a product
     function buyProduct(uint256 _id) public payable {
-        
+        Item memory item = items[_id];
+        Order memory order = Order(block.timestamp, item);
+
+        uint256 newOrderID = ++orderCounts[msg.sender];
+        orders[msg.sender][newOrderID] = order;
+
+        items[_id].stock -= 1;
     }
 
     // TODO: FUNCTION - withdraw the funds

@@ -94,10 +94,20 @@ describe("Dappazon", () => {
       await transaction.wait();
     })
 
-    it("Contract balance for only one product of 1 ETH", async () => {
+    it("Match contract balance", async () => {
       const result = await ethers.provider.getBalance(dappazon.address);
-      console.log(result);
       expect(result).to.be.equal(dummyProduct.cost);
+    })
+
+    it("Match buyer's order count", async () => {
+      const fetchedCount = await dappazon.connect(buyer).getOrderCount();
+      expect(fetchedCount).to.be.equal(1);
+    });
+
+    it("Match buyer's order", async () => {
+      const fetchedOrder = await dappazon.connect(buyer).getOrder(1);
+      expect(fetchedOrder.time).to.be.greaterThan(0);
+      expect(fetchedOrder.item.name).to.be.equal(dummyProduct.name);
     })
   })  
 });
