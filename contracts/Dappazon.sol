@@ -31,6 +31,12 @@ contract Dappazon {
         storeOwner = msg.sender;
     }
 
+    // TODO: EVENT - emit information about added product
+    event AddProduct(uint256 _id, string _name, uint256 _stock);
+
+    // TODO: EVENT - emit information about order & purchase
+    event BuyProduct(address _buyer, uint256 _ordersCount, uint256 _itemID);
+
     // TODO: MODIFIER - check only for owner/deployer of the contract
     modifier onlyOwner() {
         require(
@@ -40,8 +46,17 @@ contract Dappazon {
         _;
     }
 
-    // TODO: EVENT - emit information about added product
-    event AddProduct(uint256 _id, string _name, uint256 _stock);
+    // TODO: MODIFIER - check for available stock
+    modifier stockAvailability(uint256 _id){
+        require(items[_id].stock > 0, "No stock available for the desired item");
+        _;
+    }
+
+    // TODO: MODIFIER - check of minimum amount to purchase item
+    modifier minimumAmount(uint256 _id) {
+        require(msg.value >= items[_id].cost, "Miniumum amount required to place order");
+        _;
+    }
 
     // TODO: FUNCTION - get deployed contract's name
     function getContractName() public view returns (string memory) {
@@ -95,8 +110,9 @@ contract Dappazon {
     }
 
     // TODO: FUNCTION - buy a product
-    function buyProduct(uint256 _id) public payable {
+    function buyProduct(uint256 _id) public payable stockAvailability(_id) minimumAmount(_id) {
         Item memory item = items[_id];
+
         Order memory order = Order(block.timestamp, item);
 
         uint256 newOrderID = ++orderCounts[msg.sender];
