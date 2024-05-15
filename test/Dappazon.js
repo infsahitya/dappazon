@@ -60,8 +60,8 @@ describe("Dappazon", () => {
     })
 
     it("Product Matched", async () => {
-      const fetchedItem = await dappazon.getProduct(1);
-      expect(fetchedItem.id).to.be.equal(1);
+      const fetchedItem = await dappazon.getProduct(dummyProduct.id);
+      expect(fetchedItem.id).to.be.equal(dummyProduct.id);
     })
 
     it("Event Emitted", async () => {
@@ -70,7 +70,8 @@ describe("Dappazon", () => {
 
     it("List Products", async () => {
       const fetchedItems = await dappazon.listProducts();
-      console.log(fetchedItems);
+      expect(fetchedItems.length).to.be.equal(1);
+      expect(fetchedItems[0].id).to.be.equal(dummyProduct.id);
     })
   })
 });
