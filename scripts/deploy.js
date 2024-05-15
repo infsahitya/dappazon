@@ -30,7 +30,7 @@ async function main() {
       .connect(deployer)
       .addProduct(
         item.id,
-        item.cost,
+        tokens(item.cost),
         item.stock,
         item.rating,
         item.name,
