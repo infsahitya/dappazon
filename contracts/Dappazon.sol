@@ -47,14 +47,20 @@ contract Dappazon {
     }
 
     // TODO: MODIFIER - check for available stock
-    modifier stockAvailability(uint256 _id){
-        require(items[_id].stock > 0, "No stock available for the desired item");
+    modifier stockAvailability(uint256 _id) {
+        require(
+            items[_id].stock > 0,
+            "No stock available for the desired item"
+        );
         _;
     }
 
     // TODO: MODIFIER - check of minimum amount to purchase item
     modifier minimumAmount(uint256 _id) {
-        require(msg.value >= items[_id].cost, "Miniumum amount required to place order");
+        require(
+            msg.value >= items[_id].cost,
+            "Miniumum amount required to place order"
+        );
         _;
     }
 
@@ -110,7 +116,9 @@ contract Dappazon {
     }
 
     // TODO: FUNCTION - buy a product
-    function buyProduct(uint256 _id) public payable stockAvailability(_id) minimumAmount(_id) {
+    function buyProduct(
+        uint256 _id
+    ) public payable stockAvailability(_id) minimumAmount(_id) {
         Item memory item = items[_id];
 
         Order memory order = Order(block.timestamp, item);
@@ -119,10 +127,15 @@ contract Dappazon {
         orders[msg.sender][newOrderID] = order;
 
         items[_id].stock -= 1;
+
+        emit BuyProduct(msg.sender, newOrderID, item.id);
     }
 
     // TODO: FUNCTION - withdraw the funds
-    function withdrawFunds() public {}
+    function withdrawFunds() public onlyOwner {
+        (bool success, ) = storeOwner.call{value: address(this).balance}("");
+        require(success);
+    }
 
     // TODO: FUNCTION - list all the products stored in mapping
     function listProducts() public view returns (Item[] memory) {

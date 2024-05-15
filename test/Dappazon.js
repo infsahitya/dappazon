@@ -18,6 +18,7 @@ const dummyProduct = {
 }
 
 const addProductEventName = "AddProduct";
+const buyProductEventName = "BuyProduct";
 
 describe("Dappazon", () => {
   let dappazon;
@@ -64,7 +65,7 @@ describe("Dappazon", () => {
       expect(fetchedItem.id).to.be.equal(dummyProduct.id);
     })
 
-    it("Event Emitted", async () => {
+    it("Capture Add Event", async () => {
       expect(transaction).to.emit(dappazon, addProductEventName);
     })
 
@@ -108,6 +109,10 @@ describe("Dappazon", () => {
       const fetchedOrder = await dappazon.connect(buyer).getOrder(1);
       expect(fetchedOrder.time).to.be.greaterThan(0);
       expect(fetchedOrder.item.name).to.be.equal(dummyProduct.name);
+    })
+
+    it("Capture buy event", async () => {
+      expect(transaction).to.emit(dappazon, buyProductEventName);
     })
   })  
 });
