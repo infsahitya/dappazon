@@ -2,7 +2,6 @@
 pragma solidity ^0.8.9;
 
 contract Dappazon {
-    uint256 private totalItems;
     address private storeOwner;
     string private contractName;
 
@@ -17,17 +16,19 @@ contract Dappazon {
     }
 
     mapping(uint256 => Item) private items;
+    uint256[] private ItemIDs;
 
     constructor(string memory initContractName) {
         contractName = initContractName;
         storeOwner = msg.sender;
-
-        totalItems = 0;
     }
 
     // TODO: MODIFIER - check only for owner/deployer of the contract
     modifier onlyOwner() {
-        require(storeOwner == msg.sender, "Only deployer of the contract can add a product");
+        require(
+            storeOwner == msg.sender,
+            "Only deployer of the contract can add a product"
+        );
         _;
     }
 
@@ -70,6 +71,7 @@ contract Dappazon {
         );
 
         items[_id] = item;
+        ItemIDs.push(_id);
 
         emit AddProduct(_id, _name, _stock);
     }
@@ -82,10 +84,11 @@ contract Dappazon {
 
     // TODO: FUNCTION - list all the products stored in mapping
     function listProducts() public view returns (Item[] memory) {
+        uint256 totalItems = ItemIDs.length;
         Item[] memory productsList = new Item[](totalItems);
 
         for (uint256 i = 0; i < totalItems; i++) {
-            productsList[i] = items[i];
+            productsList[i] = items[ItemIDs[i]];
         }
 
         return productsList;

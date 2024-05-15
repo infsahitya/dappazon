@@ -67,5 +67,10 @@ describe("Dappazon", () => {
     it("Event Emitted", async () => {
       expect(transaction).to.emit(dappazon, addProductEventName);
     })
+
+    it("List Products", async () => {
+      const fetchedItems = await dappazon.listProducts();
+      console.log(fetchedItems);
+    })
   })
 });
